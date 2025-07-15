@@ -8,7 +8,7 @@ servers:
     description: Development server
 
 x-ogen:
-  target: ../../pkg/openapi/order/v1
+  target: ./shared/pkg/openapi/order/v1
   package: orderv1
 
 paths:
@@ -43,6 +43,12 @@ paths:
             application/json:
               schema:
                 $ref: "./components/errors/internal_server_error.yaml"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "./components/errors/internal_server_error.yaml"
 
   /api/v1/orders/{order_uuid}:
     get:
@@ -67,6 +73,12 @@ paths:
                 $ref: "./components/errors/not_found_error.yaml"
         "500":
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "./components/errors/internal_server_error.yaml"
+        default:
+          description: Unexpected error
           content:
             application/json:
               schema:
@@ -117,6 +129,12 @@ paths:
             application/json:
               schema:
                 $ref: "./components/errors/internal_server_error.yaml"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "./components/errors/internal_server_error.yaml"
 
   /api/v1/orders/{order_uuid}/cancel:
     post:
@@ -143,6 +161,12 @@ paths:
                 $ref: "./components/errors/conflict_error.yaml"
         "500":
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "./components/errors/internal_server_error.yaml"
+        default:
+          description: Unexpected error
           content:
             application/json:
               schema:
