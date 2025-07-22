@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	port = ":50051"
+	port = "localhost:50051"
 )
 
 func main() {
@@ -32,9 +32,9 @@ func main() {
 
 	log.Printf("Inventory Service listening on %s", port)
 	log.Println("Available methods:")
-	log.Println("\t - GetPart: получение детали по UUID")
-	log.Println("\t - ListParts: получение списка деталей с фильтрацией")
-	log.Println("Для тестирования используйте grpcurl или любой gRPC клиент")
+	log.Println("\t - GetPart: getting a detail by UUID")
+	log.Println("\t - ListParts: getting parts list with filtering")
+	log.Println("For testing use grpcurl or any gRPC client")
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve gRPC server: %v", err)
