@@ -73,78 +73,79 @@ func isEmptyFilter(filter *inventoryv1.PartsFilter) bool {
 		len(filter.Tags) == 0
 }
 
+func matchesUuids(part *inventoryv1.Part, uuids []string) bool {
+	if len(uuids) == 0 {
+		return true
+	}
+
+	for _, uuid := range uuids {
+		if part.Uuid == uuid {
+			return true
+		}
+	}
+	return false
+}
+
+func matchesNames(part *inventoryv1.Part, names []string) bool {
+	if len(names) == 0 {
+		return true
+	}
+
+	for _, name := range names {
+		if strings.Contains(strings.ToLower(part.Name), strings.ToLower(name)) {
+			return true
+		}
+	}
+	return false
+}
+
+func matchesCategories(part *inventoryv1.Part, categories []inventoryv1.Category) bool {
+	if len(categories) == 0 {
+		return true
+	}
+
+	for _, category := range categories {
+		if part.Category == category {
+			return true
+		}
+	}
+	return false
+}
+
+func matchesManufacturerCountries(part *inventoryv1.Part, countries []string) bool {
+	if len(countries) == 0 {
+		return true
+	}
+
+	for _, country := range countries {
+		if strings.EqualFold(part.Manufacturer.Country, country) {
+			return true
+		}
+	}
+	return false
+}
+
+func matchesTags(part *inventoryv1.Part, filterTags []string) bool {
+	if len(filterTags) == 0 {
+		return true
+	}
+
+	for _, filterTag := range filterTags {
+		for _, partTag := range part.Tags {
+			if strings.EqualFold(partTag, filterTag) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func matchesPart(part *inventoryv1.Part, filter *inventoryv1.PartsFilter) bool {
-	if len(filter.Uuids) > 0 {
-		found := false
-		for _, uuid := range filter.Uuids {
-			if part.Uuid == uuid {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-
-	if len(filter.Names) > 0 {
-		found := false
-		for _, name := range filter.Names {
-			if strings.Contains(strings.ToLower(part.Name), strings.ToLower(name)) {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-
-	if len(filter.Categories) > 0 {
-		found := false
-		for _, category := range filter.Categories {
-			if part.Category == category {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-
-	if len(filter.ManufacturerCountries) > 0 {
-		found := false
-		for _, country := range filter.ManufacturerCountries {
-			if strings.EqualFold(part.Manufacturer.Country, country) {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-
-	if len(filter.Tags) > 0 {
-		found := false
-		for _, filterTag := range filter.Tags {
-			for _, partTag := range part.Tags {
-				if strings.EqualFold(partTag, filterTag) {
-					found = true
-					break
-				}
-			}
-			if found {
-				break
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-
-	return true
+	return matchesUuids(part, filter.Uuids) &&
+		matchesNames(part, filter.Names) &&
+		matchesCategories(part, filter.Categories) &&
+		matchesManufacturerCountries(part, filter.ManufacturerCountries) &&
+		matchesTags(part, filter.Tags)
 }
 
 func (s *MemoryStorage) initSampleData() {
